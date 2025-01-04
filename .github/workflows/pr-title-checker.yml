@@ -17,17 +17,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check type
+        id: type
         run: |
           VALID_COMMIT_TYPES="chore|ci|docs|feat|fix|refactor|test"
           REGEX="^((Merge[ a-z-]* branch.*)|(Revert*)|((${VALID_COMMIT_TYPES})(\(.*\))?!?: .*))"
 
           COMMIT_MESSAGE="${{ github.event.pull_request.title }}"
 
-          echo "Commit Message: ${COMMIT_MESSAGE}"
+          echo "PR Title: ${COMMIT_MESSAGE}"
 
           if ! [[ $COMMIT_MESSAGE =~ $REGEX ]]; then
             echo "::error title=Type::Incorrect type used. Valid types are ${VALID_COMMIT_TYPES}"
-            exit 1
+            echo "result=fail" >> "$GITHUB_OUTPUT"
           else
-            echo "::notice title=Type::All good"
+            echo "::notice title=Type::A valid type is used"
+            echo "result=ok" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check result
+        env:
+          FAILURE: ${{ contains(join(steps.*.outputs.result, ','), 'fail') }}
+        run: |
+          echo "Failure: $FAILURE"
+          if [ "$FAILURE" = "false" ]; then
+            exit 0
+          else
+            exit 1
           fi
