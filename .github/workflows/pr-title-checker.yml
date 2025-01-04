@@ -1,0 +1,29 @@
+name: "PR Title Checker"
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - labeled
+      - unlabeled
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check type
+        run: |
+          VALID_COMMIT_TYPES="chore|ci|docs|feat|fix|refactor|test"
+          REGEX="^((Merge[ a-z-]* branch.*)|(Revert*)|((${VALID_COMMIT_TYPES})(\(.*\))?!?: .*))"
+
+          COMMIT_MESSAGE="${{ github.event.pull_request.title }}"
+
+          echo "Commit Message: ${COMMIT_MESSAGE}"
+
+          if ! [[ $COMMIT_MESSAGE =~ $REGEX ]]; then
+            echo "::notice title=Commit message is not valid::Valid types are ${VALID_COMMIT_TYPES}"
+            exit 1
+          else
+            echo "::notice title=Valid commit message::All good"
+          fi
