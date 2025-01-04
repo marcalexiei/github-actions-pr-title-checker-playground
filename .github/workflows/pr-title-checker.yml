@@ -37,7 +37,9 @@ jobs:
         run: |
           COMMIT_MESSAGE="${{ github.event.pull_request.title }}"
           MAX_LENGTH=100
-          LENGTH=$(echo -n $STRING | wc -m)
+          LENGTH=${#COMMIT_MESSAGE}
+
+          echo "$LENGTH || $MAX_LENGTH"
 
           if [ $LENGTH -gt $MAX_LENGTH ]; then
             echo "::error title=Length::The title is longer than $MAX_LENGTH characters"
