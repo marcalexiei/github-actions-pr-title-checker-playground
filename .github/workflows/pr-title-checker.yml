@@ -24,13 +24,26 @@ jobs:
 
           COMMIT_MESSAGE="${{ github.event.pull_request.title }}"
 
-          echo "PR Title: ${COMMIT_MESSAGE}"
-
           if ! [[ $COMMIT_MESSAGE =~ $REGEX ]]; then
-            echo "::error title=Type::Incorrect type used. Valid types are ${VALID_COMMIT_TYPES}"
+            echo "::error title=Type::The title has an incorrect type.\nValid types are ${VALID_COMMIT_TYPES}"
             echo "result=fail" >> "$GITHUB_OUTPUT"
           else
-            echo "::notice title=Type::A valid type is used"
+            echo "::notice title=Type::The title is using a valid type"
+            echo "result=ok" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check length
+        id: length
+        run: |
+          COMMIT_MESSAGE="${{ github.event.pull_request.title }}"
+          MAX_LENGTH=100
+          LENGTH=$(echo -n $STRING | wc -m)
+
+          if [ $LENGTH -gt $MAX_LENGTH ]; then
+            echo "::error title=Length::The title is longer than $MAX_LENGTH characters"
+            echo "result=fail" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice title=Length::The title length is within the maximum length of $MAX_LENGTH characters"
             echo "result=ok" >> "$GITHUB_OUTPUT"
           fi
 
