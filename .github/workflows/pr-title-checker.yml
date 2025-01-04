@@ -1,4 +1,7 @@
 name: "PR Title Checker"
+
+# This workflow ensures that PR title adheres to conventional commits standard
+
 on:
   pull_request:
     types:
@@ -10,10 +13,10 @@ on:
 
 jobs:
   check_pr_title:
-    name: "Check PR title"
+    name: "PR Title Checker"
     runs-on: ubuntu-latest
     steps:
-      - name: Check commit type
+      - name: Check type
         run: |
           VALID_COMMIT_TYPES="chore|ci|docs|feat|fix|refactor|test"
           REGEX="^((Merge[ a-z-]* branch.*)|(Revert*)|((${VALID_COMMIT_TYPES})(\(.*\))?!?: .*))"
@@ -23,8 +26,8 @@ jobs:
           echo "Commit Message: ${COMMIT_MESSAGE}"
 
           if ! [[ $COMMIT_MESSAGE =~ $REGEX ]]; then
-            echo "::error title=Commit type::Incorrect type used. Valid types are ${VALID_COMMIT_TYPES}"
+            echo "::error title=Type::Incorrect type used. Valid types are ${VALID_COMMIT_TYPES}"
             exit 1
           else
-            echo "::notice title=Commit type::All good"
+            echo "::notice title=Type::All good"
           fi
