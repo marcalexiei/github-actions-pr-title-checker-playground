@@ -20,7 +20,7 @@ jobs:
         id: type
         run: |
           VALID_COMMIT_TYPES="chore|ci|docs|feat|fix|refactor|test"
-          REGEX="^(${VALID_COMMIT_TYPES})(\(.*\))?!?: .*)"
+          REGEX="^${VALID_COMMIT_TYPES})(\(.*\))?!?: .*"
 
           COMMIT_MESSAGE="${{ github.event.pull_request.title }}"
 
