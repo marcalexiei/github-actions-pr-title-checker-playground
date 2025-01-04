@@ -25,7 +25,7 @@ jobs:
           COMMIT_MESSAGE="${{ github.event.pull_request.title }}"
 
           if ! [[ $COMMIT_MESSAGE =~ $REGEX ]]; then
-            echo "::error title=Type::The title has an incorrect type.\nValid types are ${VALID_COMMIT_TYPES}"
+            echo "::error title=Type::The title has an incorrect type. Valid types are ${VALID_COMMIT_TYPES}"
             echo "result=fail" >> "$GITHUB_OUTPUT"
           else
             echo "::notice title=Type::The title is using a valid type"
