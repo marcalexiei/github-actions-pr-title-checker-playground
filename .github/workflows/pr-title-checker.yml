@@ -23,7 +23,7 @@ jobs:
         id: type
         run: |
           VALID_COMMIT_TYPES="chore|ci|docs|feat|fix|refactor|test"
-          REGEX="^${VALID_COMMIT_TYPES})(\(.*\))?!?: .*"
+          REGEX="^${VALID_COMMIT_TYPES}(\(.*\))?!?: .*"
 
           if ! [[ $PR_TITLE =~ $REGEX ]]; then
             echo "::error title=Type::The title has an incorrect type. Valid types are ${VALID_COMMIT_TYPES}"
